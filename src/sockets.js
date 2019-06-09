@@ -1,13 +1,33 @@
+Chat =require('./models/Chat');
+
 module.exports = function (io) {
 
     let usuarios={};
     
-    io.on('connection', socket=>{
+    io.on('connection',async socket=>{
 
       
+
+        let messages = await Chat.find({}).limit(8).sort('-created');
+        socket.emit('loadmsg', messages);
+
+ 
+        socket.on("newuser",(data,cb)=>{
+
+            if(data in usuarios){
+                cb(false)
+            }else{
+                cb(true)
+                socket.newuser=data;
+                usuarios[socket.newuser]= socket;
+                updateUsuarios()
+
+                
+            }
+        });
     
         //Envio de mensajes
-        socket.on("sendMessage",(data,cb)=>{
+        socket.on("sendMessage", async (data,cb)=>{
 
             var msj = data.trim();
      
@@ -58,7 +78,14 @@ module.exports = function (io) {
             //si no es un mgj directo
             }else{
 
-     
+                    //guardar en Mongo DB
+                  var newMsg =new Chat({
+                        msg:data,
+                        nick:socket.newuser
+                    });
+                                  
+                    await newMsg.save();
+
                 io.sockets.emit('newMessage',{
                     msg:data,
                     nick:socket.newuser
@@ -67,20 +94,6 @@ module.exports = function (io) {
    
         })
 
-
-        socket.on("newuser",(data,cb)=>{
-
-            if(data in usuarios){
-                cb(false)
-            }else{
-                cb(true)
-                socket.newuser=data;
-                usuarios[socket.newuser]= socket;
-                updateUsuarios()
-
-                
-            }
-        });
 
         socket.on("disconnect",(data)=>{
             if(!socket.newuser) return;

@@ -10,11 +10,21 @@ const path = require('path');
 const urlpach= path.join(__dirname,'public') 
 const cpublic =express.static(urlpach);
 
+const mongoose =  require('mongoose');
 app.use(cpublic)
 const server =http.createServer(app);
 
 //settigs
 app.set('port',process.env.PORT || 3000);
+
+// connection to the server
+
+const mongoURI = 'mongodb://localhost/chat';
+mongoose.connect(mongoURI,{ useNewUrlParser: true })
+  .then(db => console.log('db connected'))
+  .catch(err => console.log(err));
+
+  //mongoose.connect('mongodb://localhost/auth');
 // server socket
 const io= socketio.listen(server);
     require('./sockets')(io);

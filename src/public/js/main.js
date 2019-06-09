@@ -24,12 +24,23 @@ $(function (){
    
         });
       
-      
+      //mensaje privado
         socket.on('whisper',(data)=>{
             mensaBody(data,true)
         });
         
+        
 
+         //cargar mensajes 
+         socket.on('loadmsg',(msgs)=>{
+
+            for (let i = msgs.length -1; i >=0 ; i--) {
+              
+                mensaBody(msgs[i]);
+            }
+
+        });
+        
         socket.on('usernames',(data)=>{ 
         let html = '';
 
@@ -114,17 +125,7 @@ socket.emit('sendMessage', chat, data =>{
 
 
 
-var body =                       '<div class="row msg_container base_receive">' +
-						'<div class="col-md-10 col-xs-10 ">' +
-                            '<div class="messages msg_sent">' +
-                                '<p>'+ chat + '</p>'+
-                               ' <time datetime="2009-11-13T20:00">Administrator • Today '+time+'</time>'+
-                            '</div>' +
-                        '</div>' +
-                        '<div class="col-md-2 col-xs-2 avatar">' +
-                            '<img class="chatimg" src="https://api.adorable.io/avatars/285/323698.png" class=" img-responsive ">' +
-                        '</div>' +
-					'</div>';
+
 }
 //$(body).appendTo("#messagebody");
 $('#btn-input').val('');
