@@ -30,6 +30,12 @@ $(document).on('click', '.icon_close', function (e) {
     $( "#chatbox" ).hide();
 });
 
+
+$(document).on('click', '.modaluser', function (e) {
+    //$(this).parent().parent().parent().parent().remove();
+
+   
+});
 // send function start
 
 
