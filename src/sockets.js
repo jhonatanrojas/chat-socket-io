@@ -9,7 +9,7 @@ module.exports = function (io) {
       
 
         let messages = await Chat.find({}).limit(8).sort('-created');
-        socket.emit('loadmsg', messages);
+       
 
  
         socket.on("newuser",(data,cb)=>{
@@ -91,7 +91,9 @@ module.exports = function (io) {
                     nick:socket.newuser
                 });
             }
-   
+
+            //esta es una prueba
+            socket.emit('loadmsg', data);
         })
 
 
